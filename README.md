@@ -14,7 +14,7 @@ While I was searching for this information, various guides fell short for what I
 
 Lastly, I will point out the subscribe/publish cycle is explained well in many MQTT guides - this simplicity is its strength!
 
-# Assumptions
+## Assumptions
 These instructions assume the reader:
 * Is using a hostname of **homeassistant** for HA - if not, replace where necessary; 
 * Has already installed the MQTT broker on their HA instance;
@@ -24,7 +24,7 @@ These instructions assume the reader:
 * Is NOT trying to communicate with a Raspberry Pi their HA instance is actually running on (which would be weird); and,
 * Will amend sample credentials to something much more secure in their environment!
 
-# Installation
+## Install script?
 As I'm merely storing helpful scripts here for reference, there's no bundle of files to download, nor is there any automated process in this repository that will 'just do it' for you; this is a "hands-on" guide.
 
 # What is MQTT?
@@ -32,15 +32,15 @@ MQTT can be thought of as "message queues" managed by a central broker (that bro
 Each queue is called a 'topic'.  With the correct permissions, any device can **publish** a message to a topic.
 Similarly, any device can also **subscribe** to a topic, and thus receive any messages that published to it.
 
-# Checking HA's MQTT Broker
-In **Home Assistant**, go to **Settings** / **Devices & Services** / **MQTT** / click the **cog icon** to display the **MQTT settings** panel. 
+## Checking HA's MQTT Broker
+In **Home Assistant**, go to **Settings** / **Devices & Services** / **MQTT** / click the **⚙ cog icon** to display the **MQTT settings** panel. 
 Disregard the panel title - this is actually a useful test area, which we can use to verify the broker is working properly.
 
-## Listen to a topic
+### Listen to a topic
 At the bottom of the panel, enter the **Topic to subscribe to** as `garage/door` and then click the **Start listening** link.
 At this point, any MQTT messages for the garage/door topic sent from any device will be displayed at the bottom of the screen.
 
-## Sending your first message
+### Sending your first message
 To fire off a message, in the top section **Publish a packet**, enter a **Topic** value of `garage/door` - this must match what we typed previously.
 In the payload field, type some plain text and click **Publish** - you'll then see your message appear in the listening section below.
 While this may seem overly simplistic, it actually proves the enter cycle is working behind the scenes. You're ready to proceed.
@@ -48,7 +48,7 @@ While this may seem overly simplistic, it actually proves the enter cycle is wor
 > [!TIP]
 > If this doesn't work or you can't see MQTT in **Devices & services**, you'll need to follow one of the many guides to install it and/or possibly restart HA.
 
-# Getting the Raspberry Pi on the MQTT bandwagon
+## MQTT client on Raspberry Pi
 On the remote Rasperry Pi, install the required MQTT client software -
 ```sh
 sudo apt-get install mosquitto-clients
@@ -60,7 +60,7 @@ mosquitto_sub -h homeassistant -t test -u mqtt-user -P mypassword
 This command will be an amazing example of... nothing.  Because there's no messages to receive yet!
 Leave this SSH session - we'll come back to it shortly - and start another session.
 
-# Sending your second message
+### Sending your second message
 Let's publish a message using the command below (while it looks similar, it is actually a different command) -
 ```sh
 mosquitto_pub -h homeassistant -t test -m "Hello, MQTT!" -u mqtt-user -P mypassword
@@ -72,7 +72,7 @@ $ mosquitto_sub -h homeassistant -t test -u mqtt-user -P mypassword
 Hello, MQTT!
 ```
 
-# Time to get the party started
+## Time to get the party started
 Assuming you've already got a series of commands that "do something", let's get down to the useful part.
 We're going to need a "subscribe" script that can 'read' the incoming payload and, then decide what to do.
 Create a new script `nano mqtt_receiver.sh` and paste the code below:
@@ -108,7 +108,7 @@ echo "-- Script terminated."
 Once you have saved the shell script, make it executable using `chmod u+x mqtt_receiver.sh` and then run it via `./mqtt_receiver.sh`
 Just like the earlier subscribe script, it will wait until it receives a message before doing anything...  
 
-# Trigger the script via MQTT (aka 'Sending your third message')
+### Trigger the script via MQTT (aka 'Sending your third message')
 In a new SSH session enter the command below to publish the message that our script is expecting.
 ```sh
 mosquitto_pub -h homeassistant -t 'garage/door' -m "OPEN" -u mqtt-user -P mypassword
@@ -131,3 +131,4 @@ Commands below will OPEN the garage door.
   - 04_mqtt_receiver.sh
   - 05_send_OPEN_to_garage-door.sh
   - 06_send_CLOSE_to_garage-door.sh
+
