@@ -32,9 +32,17 @@ MQTT can be thought of as "message queues" managed by a central broker (that bro
 Each queue is called a 'topic'.  With the correct permissions, any device can **publish** a message to a topic.
 Similarly, any device can also **subscribe** to a topic, and thus receive any messages that published to it.
 
-## Checking HA's MQTT Broker
-In **Home Assistant**, go to **Settings** / **Devices & Services** / **MQTT** / click the **⚙ cog icon** to display the **MQTT settings** panel. 
-Disregard the panel title - this is actually a useful test area, which we can use to verify the broker is working properly.
+## MQTT Broker in Home Assistant
+In **Home Assistant** go to  **Settings**  then  **Devices & Services**  and find the  **MQTT**  integration.
+<img width="1041" height="900" alt="image" src="https://github.com/user-attachments/assets/8d7aa2fc-05c0-4a9f-b29f-5022c5884138" />
+
+### Checking HA's MQTT Broker
+Click the **⚙ cog icon** to display the **MQTT settings** panel -
+<img width="767" height="890" alt="image" src="https://github.com/user-attachments/assets/c647371e-803e-4eb6-8384-91fa4b08c159" />
+(disregard the panel title - this is actually a useful test area for verifying the broker is working properly per the diagram below)
+
+<img width="1337" height="129" alt="image" src="https://github.com/user-attachments/assets/e1c6d1ef-8009-476d-8acf-6901c16bfe17" />
+
 
 ### Listen to a topic
 At the bottom of the panel, enter the **Topic to subscribe to** as `garage/door` and then click the **Start listening** link.
