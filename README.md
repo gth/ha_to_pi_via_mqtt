@@ -1,4 +1,4 @@
-# Trigger shell scripts on a (remote) Raspberry Pi from Home Assistant using MQTT
+# Trigger scripts on a (remote) Raspberry Pi from Home Assistant using MQTT
 
 I stumbled across some tasty morsels of relevant information and figured I'd present them here.
 My aim is to document what I found in a logical way so others might follow the sequence more easily.
@@ -61,14 +61,66 @@ This command will be an amazing example of... nothing.  Because there's no messa
 Leave this SSH session - we'll come back to it shortly - and start another session.
 
 # Sending your second message
-Let's publish a message using the command below (note that is actually a different command) -
+Let's publish a message using the command below (while it looks similar, it is actually a different command) -
 ```sh
 mosquitto_pub -h homeassistant -t test -m "Hello, MQTT!" -u mqtt-user -P mypassword
 ```
 
-Something has happened!  Go back to the SSH session where you subscribed to the **test** topic and you'll see that a message has appeared:
+Go back to the SSH session where you subscribed to the **test** topic and you'll see a message has appeared:
 ```
 $ mosquitto_sub -h homeassistant -t test -u mqtt-user -P mypassword
 Hello, MQTT!
 ```
 
+# Time to get the party started
+Assuming you've already got a series of commands that "do something", let's get down to the useful part.
+We're going to need a "subscribe" script that can 'read' the incoming payload and, then decide what to do.
+Create a new script `nano mqtt_receiver.sh` and paste the code below:
+
+```sh
+#!/bin/bash
+
+# Configuration
+MQTT_BROKER="homeassistant"          # MQTT server
+MQTT_TOPIC="garage/door"             # Topic to subscribe to
+CLIENT_ID="sub_client_$(date +%s)"   # A unique client ID
+
+echo "Subscribing to topic: $MQTT_TOPIC on broker: $MQTT_BROKER"
+
+# Subscribe to the topic and pipe the output to a while loop
+mosquitto_sub -u mqtt-user -P mypassword -h "${MQTT_BROKER}" -t "${MQTT_TOPIC}" -i "${CLIENT_ID}" | while read -r payload ; do
+    if [ "$payload" == "ON" ]; then
+        echo "Commands below will turn something ON."
+        # (insert commands here)
+    elif [ "$payload" == "OFF" ]; then
+        echo "Commands below will turn something OFF."
+        # (insert commands here)
+    else
+        echo "Payload not recognised ($payload)."
+    fi
+done
+echo "-- Script terminated."
+```
+
+> [!NOTE]
+> Despite searching for it, I cannot find the original source for this shell script.  All credit goes to the original author - my changes were minimal.
+
+Once you have saved the shell script, make it executable using `chmod u+x mqtt_receiver.sh` and then run it via `./mqtt_receiver.sh`
+Just like the earlier subscribe script, it will wait until it receives a message before doing anything...  
+
+# Trigger the script via MQTT (aka 'Sending your third message')
+In a new SSH session enter the command below to publish the message that our script is expecting.
+```sh
+mosquitto_pub -h homeassistant -t 'garage/door' -m "ON" -u mqtt-user -P mypassword
+```
+
+...and if we go back to the first SSH session, we can see the relevant section of the script was triggered:
+```sh
+$ ./mqtt_receiver.sh
+Subscribing to topic: garage/door on broker: homeassistant
+Commands below will turn something ON.
+```
+
+# TODO
+- add steps required so a dashboard button publishes the required MQTT packet
+- provide instructions on running the Pi's subscription script at bootup
