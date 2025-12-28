@@ -36,7 +36,7 @@ In **Home Assistant** go to  **Settings**  then  **Devices & Services**  and fin
 <img width="520" height="450" alt="image" src="https://github.com/user-attachments/assets/8d7aa2fc-05c0-4a9f-b29f-5022c5884138" />
 
 > [!TIP]
-> If you can't see MQTT in **Devices & services**, you'll need to follow one of the many guides to install it and/or possibly restart HA.
+> If you can't see MQTT in **Integrations**, you'll need to follow one of the many guides to install it and/or possibly restart HA.
 
 Click the **⚙ cog icon** to display the **MQTT settings** panel -
 
@@ -51,7 +51,7 @@ At this point, any MQTT messages for the garage/door topic sent from any device 
 
 ### Sending your first message
 
-<img width="668" height="65" alt="image" src="https://github.com/user-attachments/assets/e1c6d1ef-8009-476d-8acf-6901c16bfe17" />
+<img width="383" height="65" alt="image" src="https://github.com/user-attachments/assets/e1c6d1ef-8009-476d-8acf-6901c16bfe17" />
 
 To fire off a message, in the top section **Publish a packet**, enter a **Topic** value of `garage/door` - this must match what we typed previously.
 In the payload field, type some plain text and click **Publish** - you'll then see your message appear in the listening section below.
