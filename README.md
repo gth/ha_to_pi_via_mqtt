@@ -1,4 +1,4 @@
-**Trigger a shell script on a (remote) Raspberry Pi from Home Assistant, using MQTT messaging.**
+# Trigger shell scripts on a (remote) Raspberry Pi from Home Assistant using MQTT
 
 I stumbled across some tasty morsels of relevant information and figured I'd present them here.
 My aim is to document what I found in a logical way so others might follow the sequence more easily.
@@ -50,20 +50,20 @@ While this may seem overly simplistic, it actually proves the enter cycle is wor
 
 # Getting the Raspberry Pi on the MQTT bandwagon
 On the remote Rasperry Pi, install the required MQTT client software -
-```
-$ sudo apt-get install mosquitto-clients
+```sh
+sudo apt-get install mosquitto-clients
 ```
 Once complete, use the command below on the Pi to **subscribe** to topic **test** on the HA broker -
-```
-$ mosquitto_sub -h homeassistant -t test -u mqtt-user -P mypassword
+```sh
+mosquitto_sub -h homeassistant -t test -u mqtt-user -P mypassword
 ```
 This command will be an amazing example of... nothing.  Because there's no messages to receive yet!
 Leave this SSH session - we'll come back to it shortly - and start another session.
 
 # Sending your second message
 Let's publish a message using the command below (note that is actually a different command) -
-```
-$ mosquitto_pub -h homeassistant -t test -m "Hello, MQTT!" -u mqtt-user -P mypassword
+```sh
+mosquitto_pub -h homeassistant -t test -m "Hello, MQTT!" -u mqtt-user -P mypassword
 ```
 
 Something has happened!  Go back to the SSH session where you subscribed to the **test** topic and you'll see that a message has appeared:
