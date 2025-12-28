@@ -1,4 +1,4 @@
-# Trigger scripts on a (remote) Raspberry Pi from Home Assistant using MQTT
+# Trigger script on remote Raspberry Pi from Home Assistant using MQTT
 
 I stumbled across some tasty morsels of relevant information and figured I'd present them here.
 My aim is to document what I found in a logical way so others might follow the sequence more easily.
