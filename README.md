@@ -116,7 +116,7 @@ echo "-- Script terminated."
 ```
 
 > [!NOTE]
-> Despite searching for it, I cannot find the original source for this shell script.  All credit goes to the original author - my changes were minimal.
+> Despite searching for it, I cannot find the original source for this shell script. <br />All credit goes to the original author - my changes were minimal.
 
 Once you have saved the shell script, make it executable using `chmod u+x mqtt_receiver.sh` and then run it via `./mqtt_receiver.sh`
 Just like the earlier subscribe script, it will wait until it receives a message before doing anything...  
@@ -134,8 +134,24 @@ Subscribing to topic: garage/door on broker: homeassistant
 Commands below will OPEN the garage door.
 ```
 
+# From dashboard to garage door
+<img width="668" height="65" alt="image" src="https://github.com/user-attachments/assets/7d74a77b-6139-4c4f-a431-845598427b45" />
+
+In the final configuration, you could use various methods to publish the required MQTT message - it could come from an automation script or directly from a dashboard button. 
+Adding the code below to a dashboard button [^1].
+```yaml
+    tap_action:
+      action: call-service
+      service: mqtt.publish
+      service_data:
+        topic: garage/door
+        payload: OPEN
+```
+[^1]: https://community.home-assistant.io/t/create-a-button-to-publish-to-mqtt/239077/6
+
+
+
 # TODO
-- add steps required so a dashboard button publishes the required MQTT packet
 - provide instructions on running the Pi's subscription script at bootup
 - add sample scripts:
   - 01_install_mqtt_client.sh
