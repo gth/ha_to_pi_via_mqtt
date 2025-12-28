@@ -1,4 +1,4 @@
-# Trigger script on remote Raspberry Pi from Home Assistant using MQTT
+# Trigger remote Pi script from Home Assistant via MQTT
 
 I stumbled across some tasty morsels of relevant information and figured I'd present them here.
 My aim is to document what I found in a logical way so others might follow the sequence more easily.
@@ -14,8 +14,7 @@ While I was searching for this information, various guides fell short for what I
 
 Lastly, I will point out the subscribe/publish cycle is explained well in many MQTT guides - this simplicity is its strength!
 
-## Assumptions
-These instructions assume the reader:
+These instructions assume the reader -
 * Is using a hostname of **homeassistant** for HA - if not, replace where necessary; 
 * Has already installed the MQTT broker on their HA instance;
 * Configured a specific user for MQTT in HA, e.g. **mqtt-user**;
@@ -24,7 +23,6 @@ These instructions assume the reader:
 * Is NOT trying to communicate with a Raspberry Pi their HA instance is actually running on (which would be weird); and,
 * Will amend sample credentials to something much more secure in their environment!
 
-As I'm merely storing helpful scripts here for reference, there's no bundle of files to download, nor is there any automated process in this repository that will 'just do it' for you; this is a "hands-on" guide.
 
 # What is MQTT?
 MQTT can be thought of as "message queues" managed by a central broker (that broker running on Home Assistant, in our case).
@@ -38,7 +36,7 @@ In **Home Assistant** go to  **Settings**  then  **Devices & Services**  and fin
 > [!TIP]
 > If you can't see MQTT in **Integrations**, you'll need to follow one of the many guides to install it and/or possibly restart HA.
 
-Click the **⚙ cog icon** to display the **MQTT settings** panel -
+After opening the MQTT integration lick the **⚙ cog icon** to display the **MQTT settings** panel -
 
 <img width="383" height="445" alt="image" src="https://github.com/user-attachments/assets/c647371e-803e-4eb6-8384-91fa4b08c159" />
 
@@ -135,7 +133,7 @@ Commands below will OPEN the garage door.
 ```
 
 # From dashboard to garage door
-<img width="668" height="65" alt="image" src="https://github.com/user-attachments/assets/7d74a77b-6139-4c4f-a431-845598427b45" />
+<img width="383" height="65" alt="image" src="https://github.com/user-attachments/assets/7d74a77b-6139-4c4f-a431-845598427b45" />
 
 In the final configuration, you could use various methods to publish the required MQTT message - it could come from an automation script or directly from a dashboard button. 
 Adding the code below to a dashboard button [^1].
