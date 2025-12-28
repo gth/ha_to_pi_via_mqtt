@@ -24,7 +24,6 @@ These instructions assume the reader:
 * Is NOT trying to communicate with a Raspberry Pi their HA instance is actually running on (which would be weird); and,
 * Will amend sample credentials to something much more secure in their environment!
 
-## Install script?
 As I'm merely storing helpful scripts here for reference, there's no bundle of files to download, nor is there any automated process in this repository that will 'just do it' for you; this is a "hands-on" guide.
 
 # What is MQTT?
@@ -32,16 +31,18 @@ MQTT can be thought of as "message queues" managed by a central broker (that bro
 Each queue is called a 'topic'.  With the correct permissions, any device can **publish** a message to a topic.
 Similarly, any device can also **subscribe** to a topic, and thus receive any messages that published to it.
 
-## MQTT Broker in Home Assistant
 In **Home Assistant** go to  **Settings**  then  **Devices & Services**  and find the  **MQTT**  integration.
+
 <img width="520" height="450" alt="image" src="https://github.com/user-attachments/assets/8d7aa2fc-05c0-4a9f-b29f-5022c5884138" />
 
-### Checking HA's MQTT Broker
-Click the **⚙ cog icon** to display the **MQTT settings** panel -
-<img width="767" height="890" alt="image" src="https://github.com/user-attachments/assets/c647371e-803e-4eb6-8384-91fa4b08c159" />
-(disregard the panel title - this is actually a useful test area for verifying the broker is working properly per the diagram below)
+> [!TIP]
+> If you can't see MQTT in **Devices & services**, you'll need to follow one of the many guides to install it and/or possibly restart HA.
 
-<img width="668" height="65" alt="image" src="https://github.com/user-attachments/assets/e1c6d1ef-8009-476d-8acf-6901c16bfe17" />
+Click the **⚙ cog icon** to display the **MQTT settings** panel -
+
+<img width="383" height="445" alt="image" src="https://github.com/user-attachments/assets/c647371e-803e-4eb6-8384-91fa4b08c159" />
+
+(disregard the panel title - this is actually a useful test area for verifying the broker is working properly per the diagram below)
 
 
 ### Listen to a topic
@@ -49,14 +50,14 @@ At the bottom of the panel, enter the **Topic to subscribe to** as `garage/door`
 At this point, any MQTT messages for the garage/door topic sent from any device will be displayed at the bottom of the screen.
 
 ### Sending your first message
+
+<img width="668" height="65" alt="image" src="https://github.com/user-attachments/assets/e1c6d1ef-8009-476d-8acf-6901c16bfe17" />
+
 To fire off a message, in the top section **Publish a packet**, enter a **Topic** value of `garage/door` - this must match what we typed previously.
 In the payload field, type some plain text and click **Publish** - you'll then see your message appear in the listening section below.
 While this may seem overly simplistic, it actually proves the enter cycle is working behind the scenes. You're ready to proceed.
 
-> [!TIP]
-> If this doesn't work or you can't see MQTT in **Devices & services**, you'll need to follow one of the many guides to install it and/or possibly restart HA.
-
-## MQTT client on Raspberry Pi
+## On the Raspberry Pi
 On the remote Rasperry Pi, install the required MQTT client software -
 ```sh
 sudo apt-get install mosquitto-clients
@@ -66,9 +67,12 @@ Once complete, use the command below on the Pi to **subscribe** to topic **test*
 mosquitto_sub -h homeassistant -t test -u mqtt-user -P mypassword
 ```
 This command will be an amazing example of... nothing.  Because there's no messages to receive yet!
+
 Leave this SSH session - we'll come back to it shortly - and start another session.
 
 ### Sending your second message
+<img width="383" height="65" alt="image" src="https://github.com/user-attachments/assets/62d815ea-da28-4117-9791-28f6fee89b28" />
+
 Let's publish a message using the command below (while it looks similar, it is actually a different command) -
 ```sh
 mosquitto_pub -h homeassistant -t test -m "Hello, MQTT!" -u mqtt-user -P mypassword
@@ -81,6 +85,7 @@ Hello, MQTT!
 ```
 
 ## Time to get the party started
+
 Assuming you've already got a series of commands that "do something", let's get down to the useful part.
 We're going to need a "subscribe" script that can 'read' the incoming payload and, then decide what to do.
 Create a new script `nano mqtt_receiver.sh` and paste the code below:
