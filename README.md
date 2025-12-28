@@ -1,5 +1,4 @@
-> [!IMPORTANT]
-> Trigger a shell script on a (remote) Raspberry Pi from Home Assistant, using MQTT messaging.
+**Trigger a shell script on a (remote) Raspberry Pi from Home Assistant, using MQTT messaging.**
 
 I stumbled across some tasty morsels of relevant information and figured I'd present them here.
 My aim is to document what I found in a logical way so others might follow the sequence more easily.
