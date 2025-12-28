@@ -89,11 +89,11 @@ echo "Subscribing to topic: $MQTT_TOPIC on broker: $MQTT_BROKER"
 
 # Subscribe to the topic and pipe the output to a while loop
 mosquitto_sub -u mqtt-user -P mypassword -h "${MQTT_BROKER}" -t "${MQTT_TOPIC}" -i "${CLIENT_ID}" | while read -r payload ; do
-    if [ "$payload" == "ON" ]; then
-        echo "Commands below will turn something ON."
+    if [ "$payload" == "OPEN" ]; then
+        echo "Commands below will OPEN the garage door."
         # (insert commands here)
-    elif [ "$payload" == "OFF" ]; then
-        echo "Commands below will turn something OFF."
+    elif [ "$payload" == "CLOSE" ]; then
+        echo "Commands below will CLOSE the garage door."
         # (insert commands here)
     else
         echo "Payload not recognised ($payload)."
@@ -111,16 +111,23 @@ Just like the earlier subscribe script, it will wait until it receives a message
 # Trigger the script via MQTT (aka 'Sending your third message')
 In a new SSH session enter the command below to publish the message that our script is expecting.
 ```sh
-mosquitto_pub -h homeassistant -t 'garage/door' -m "ON" -u mqtt-user -P mypassword
+mosquitto_pub -h homeassistant -t 'garage/door' -m "OPEN" -u mqtt-user -P mypassword
 ```
 
 ...and if we go back to the first SSH session, we can see the relevant section of the script was triggered:
 ```sh
 $ ./mqtt_receiver.sh
 Subscribing to topic: garage/door on broker: homeassistant
-Commands below will turn something ON.
+Commands below will OPEN the garage door.
 ```
 
 # TODO
 - add steps required so a dashboard button publishes the required MQTT packet
 - provide instructions on running the Pi's subscription script at bootup
+- add sample scripts:
+  - 01_install_mqtt_client.sh
+  - 02_subscribe_to_test_topic.sh
+  - 03_publish_to_test_topic.sh
+  - 04_mqtt_receiver.sh
+  - 05_send_OPEN_to_garage-door.sh
+  - 06_send_CLOSE_to_garage-door.sh
