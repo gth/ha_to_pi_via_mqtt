@@ -1,6 +1,6 @@
 # Trigger remote Pi script from Home Assistant via MQTT
 
-> _A guide to opening a garage door using Home Assistant, after installing the MQTT integration._
+> _A guide to opening a garage door with a relay attached to a Raspberry Pi, by using the MQTT integration in Home Assistant._
 
 I stumbled across some tasty morsels of relevant information and figured I'd present them here.
 The aim is to document what I found in a logical way so others might follow the sequence more easily.
