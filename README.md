@@ -210,4 +210,4 @@ Dec 29 11:02:03 pi mqtt_receiver.sh[4529]: Subscribing to topic: garage/door on 
 
 This same status command can be used to display any message the script would normally display during an interactive SSH session.
 
-Fin.
+(Fin)
