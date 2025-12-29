@@ -14,8 +14,7 @@ While I was searching for this information, various guides fell short for what I
   * (and once again, Python is fine if you prefer it, but shell scripts were rarely mentioned)
 * Some guides eventually mention Pi's MQTT client packages, but didn't explain how to use them.
 
-Lastly, I will point out the subscribe/publish cycle is explained well in many MQTT guides - this simplicity is its strength!
-
+Lastly, I will point out the subscribe/publish cycle is explained well in many MQTT guides - this simplicity is its strength!<br />
 These instructions assume the reader -
 * Is using a hostname of **homeassistant** for HA - if not, replace where necessary; 
 * Has already installed the MQTT broker on their HA instance;
@@ -38,7 +37,7 @@ In **Home Assistant** go to  **Settings**  then  **Devices & Services**  and fin
 > [!TIP]
 > If you can't see MQTT in **Integrations**, you'll need to follow one of the many guides to install it and/or possibly restart HA.
 
-After opening the MQTT integration lick the **⚙ cog icon** to display the **MQTT settings** panel -
+After opening the MQTT integration, click the **⚙ cog icon** to display the **MQTT settings** panel -
 
 <img width="383" height="445" alt="image" src="https://github.com/user-attachments/assets/c647371e-803e-4eb6-8384-91fa4b08c159" />
 
@@ -66,8 +65,7 @@ Once complete, use the command below on the Pi to **subscribe** to topic **test*
 ```sh
 mosquitto_sub -h homeassistant -t test -u mqtt-user -P mypassword
 ```
-This command will be an amazing example of... nothing.  Because there's no messages to receive yet!
-
+This command will be an amazing example of... nothing.  Because there's no messages to receive yet!<br />
 Leave this SSH session - we'll come back to it shortly - and start another session.
 
 ## Sending your second message
@@ -87,8 +85,8 @@ Hello, MQTT!
 ## Listening in a loop
 
 Assuming you've already got a series of commands that "do something", let's get down to the useful part.
-We're going to need a "subscribe" script that can 'read' the incoming payload and, then decide what to do.
-After processing a payload message, the script returns to the listening state.
+We're going to need a "subscribe" script that can 'read' the incoming payload and decide what to do.
+After processing a payload message, the script needs to return to the listening state, awaiting the next message.
 
 Create a new script `nano mqtt_receiver.sh` and paste the code below:
 
@@ -125,7 +123,7 @@ Once you have saved the shell script, make it executable using `chmod u+x mqtt_r
 Just like the earlier subscribe script, it will wait until it receives a message before doing anything...  
 
 ## Trigger the script via MQTT (aka 'Sending your third message')
-In a new SSH session enter the command below to publish the message that our script is expecting.
+In a new SSH session enter the command below to publish the message that our script is expecting:
 ```sh
 mosquitto_pub -h homeassistant -t 'garage/door' -m "OPEN" -u mqtt-user -P mypassword
 ```
@@ -140,8 +138,9 @@ Commands below will OPEN the garage door.
 # From dashboard to garage door
 <img width="383" height="65" alt="image" src="https://github.com/user-attachments/assets/7d74a77b-6139-4c4f-a431-845598427b45" />
 
-In the final configuration, you could use various methods to publish the required MQTT message - it could come from an automation script or directly from a dashboard button. 
-Adding the code below to a dashboard button [^1].
+Home Assistant supports many possible methods to publish an MQTT message.  For example, an automation script could include it as part of 
+a series of commands.  A more simple example, shown below, involves publishing an MQTT message directly from a dashboard button.
+Add the code below to one of your dashboard buttons [^1] -
 ```yaml
     tap_action:
       action: call-service
@@ -152,16 +151,19 @@ Adding the code below to a dashboard button [^1].
 ```
 [^1]: https://community.home-assistant.io/t/create-a-button-to-publish-to-mqtt/239077/6
 
-Once added, the dashboard button should then trigger the listening script on the Pi.
+Once added, check your SSH session.  The dashboard button should have  triggered the listening script on the Pi.
+
 
 # Adding resilience
-Right now, the listening script we wrote is running interactively, in our SSH session.  
-To move towards a reliable solution, we need this script to run all the time as a 'service'.
-Let's copy it to a central location so we know where it is:
+Throughout this guide, the listening component of the process has been running interactively in our SSH session.  
+For a much more reliable solution, this script should be running all the time as a 'service'. 
+The steps below go through this process:
+
+1. Copy the listening script to a central location so we know where it is.
 ```sh
 sudo cp mqtt_receiver.sh /usr/local/bin/
 ```
-Time to create the service defintion.  You'll need root permissions to create a script using the
+2. Create the service defintion.  You'll need root permissions to create a script using the
 following command: `sudo nano /etc/systemd/system/mqtt_listener.service` then paste the settings below.
 
 ```ini
@@ -178,7 +180,7 @@ Restart=always
 WantedBy=multi-user.target
 ```
 
-The following series of commands will get the service up and running
+3. The following series of commands will get the service up and running
 ```sh
 sudo systemctl daemon-reload
 sudo systemctl start mqtt_listener.service
@@ -186,7 +188,7 @@ sudo systemctl enable mqtt_listener.service
 sudo systemctl status mqtt_listener.service
 ```
 
-Provided everything went okay, you should see a status result similar to the one shown below:
+4. Provided everything went okay, you should see a status result similar to the one shown below:
 ```
 $ sudo systemctl status mqtt_listener.service
 
@@ -208,15 +210,4 @@ Dec 29 11:02:03 pi mqtt_receiver.sh[4529]: Subscribing to topic: garage/door on 
 
 This same status command can be used to display any message the script would normally display during an interactive SSH session.
 
-
-
-# TODO
-
-- add sample scripts:
-  - 01_install_mqtt_client.sh
-  - 02_subscribe_to_test_topic.sh
-  - 03_publish_to_test_topic.sh
-  - 04_mqtt_receiver.sh
-  - 05_send_OPEN_to_garage-door.sh
-  - 06_send_CLOSE_to_garage-door.sh
-
+Fin.
