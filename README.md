@@ -9,7 +9,7 @@ While I was searching for this information, various guides fell short for what I
 * How to install the MQTT broker on Home Assistant itself is described **many** times, but rarely goes further.
   * (this makes sense, since MQTT can be used for MANY things)
 * Those who wanted to trigger tasks on remote Raspberry Pi machines were usually guided towards SSH.
-  * (which is fine if that's one's preference, but the MQTT method was not presented as a viable alternative)
+  * (which is fine if that's one's preference, but MQTT was rarely presented as a viable alternative)
 * When MQTT was mentioned, Python would often be used as a one-word solution and no further explanation.
   * (and once again, Python is fine if you prefer it, but shell scripts were rarely mentioned)
 * Some guides eventually mention Pi's MQTT client packages, but didn't explain how to use them.
